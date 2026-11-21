@@ -85,6 +85,8 @@
 
 * { box-sizing: border-box; }
 html, body { margin: 0; }
+/* no double-tap zoom */
+html, body, button, input, select, textarea { touch-action: manipulation; }
 body {
   background: var(--glow) no-repeat, var(--pattern), var(--bg);
   background-attachment: fixed, scroll, scroll;

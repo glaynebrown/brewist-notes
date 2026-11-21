@@ -437,6 +437,9 @@
   });
   applyTheme();
 
+  /* ---------- no pinch zoom (iPhone ignores the viewport setting); double-tap is handled in CSS ---------- */
+  ['gesturestart', 'gesturechange', 'gestureend'].forEach(ev => document.addEventListener(ev, e => e.preventDefault(), { passive: false }));
+
   /* ---------- start ---------- */
   const setHead = () => document.documentElement.style.setProperty('--head-h', $('.top').offsetHeight + 'px');
   setHead();

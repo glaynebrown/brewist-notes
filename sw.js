@@ -1,10 +1,10 @@
 // Offline copy of the app for when there's no internet.
-const VERSION = 'bn-v14';
+const VERSION = 'bn-v15';
 const FILES = [
   './',
   'index.html',
-  'style.css?v=12',
-  'app.js?v=9',
+  'style.css?v=13',
+  'app.js?v=10',
   'data.js?v=1',
   'manifest.json',
   'apple-touch-icon.png',
