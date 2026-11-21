@@ -75,6 +75,17 @@
   document.querySelectorAll('.tab').forEach(b => b.addEventListener('click', () => showTab(b.dataset.tab)));
 
   /* ---------- recipes grid ---------- */
+  const BEAN = '<svg viewBox="0 0 24 24" aria-hidden="true"><ellipse cx="12" cy="12" rx="6.5" ry="9.5" transform="rotate(30 12 12)" fill="currentColor"/><path d="M8.2 5.8c3.6 3 .4 8.4 7.6 12.4" fill="none" stroke="var(--bg)" stroke-width="1.6" stroke-linecap="round"/></svg>';
+  const napping = side => `<div class="napping" aria-hidden="true">
+    <svg viewBox="0 0 64 64" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+      <path d="M12 28h30v10a13 13 0 0 1-13 13h-4a13 13 0 0 1-13-13z"/>
+      <path d="M42 31h3.5a5.5 5.5 0 0 1 0 11H41"/>
+      <path d="M20 37q2.5 2.5 5 0M29 37q2.5 2.5 5 0"/>
+      <path d="M25 44q2 1.2 4 0"/>
+      <path d="M46 10h6l-6 7h6M38 16h4l-4 4.5h4"/>
+    </svg>
+    <span>no ${side} version</span>
+  </div>`;
   function sortKey(r) {
     return (r.level != null ? r.level : 100) * 1000 + RECIPES.indexOf(r);
   }
@@ -90,19 +101,20 @@
       rows.set(base, row);
     }
     const sorted = [...rows.values()].sort((a, b) => a.sort - b.sort);
-    const card = r => r ? `
+    const card = (r, side) => r ? `
       <button class="card ${r.temp}" data-id="${r.id}">
+        <span class="tag ${r.temp}">${r.temp === 'iced' ? 'ICED' : 'HOT'}</span>
         <img src="img/${esc(r.img)}" alt="">
         <div class="info">
           <h3>${esc(r.name)}</h3>
           <div class="chips">${r.ing.map(i => chip(i)).join('')}</div>
         </div>
-      </button>` : '';
+      </button>` : napping(side);
     $('#grid').innerHTML = sorted.length
-      ? sorted.map(row => `<div class="slot">${card(row.hot)}</div><div class="slot">${card(row.iced)}</div>`).join('')
+      ? sorted.map(row => `<div class="slot">${card(row.hot, 'hot')}</div><div class="slot">${card(row.iced, 'iced')}</div>`).join('')
       : `<p class="empty-note">No drinks yet — tap “Unlock a drink” to add the ones you have.</p>`;
     const left = RECIPES.length - unlocked.size;
-    $('#unlockBtn').textContent = left ? `+ Unlock a drink (${left} more in the game)` : 'All drinks unlocked!';
+    $('#unlockBtn').innerHTML = BEAN + (left ? `Unlock a drink (${left} more in the game)` : 'All drinks unlocked!') + BEAN;
     $('#unlockBtn').disabled = !left;
   }
   $('#grid').addEventListener('click', e => {
@@ -388,6 +400,9 @@
   $('#addLineBtn').addEventListener('click', openAddLine);
 
   /* ---------- start ---------- */
+  const setHead = () => document.documentElement.style.setProperty('--head-h', $('.top').offsetHeight + 'px');
+  setHead();
+  addEventListener('resize', setHead);
   renderGrid();
   renderResults();
   showTab(load('bn.tab', 'recipes') === 'talk' ? 'talk' : 'recipes');
