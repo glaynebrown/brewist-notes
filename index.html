@@ -1,0 +1,60 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Brewist Notes</title>
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="default">
+<meta name="apple-mobile-web-app-title" content="Brewist Notes">
+<meta name="theme-color" content="#f6ecdf">
+<link rel="apple-touch-icon" href="apple-touch-icon.png">
+<link rel="icon" href="apple-touch-icon.png">
+<link rel="manifest" href="manifest.json">
+<link rel="stylesheet" href="style.css?v=3">
+</head>
+<body>
+<header class="top">
+  <h1>Brewist Notes</h1>
+  <nav class="tabs" role="tablist">
+    <button class="tab on" data-tab="recipes" role="tab">Recipes</button>
+    <button class="tab" data-tab="talk" role="tab">Customer talk</button>
+  </nav>
+</header>
+
+<main>
+  <section id="recipes" class="pane on">
+    <div class="legend">
+      <span class="chip hot">Hot = Coffee Mug · steamed milk / hot water</span>
+      <span class="chip iced">Iced = Large Glass · Ice · cold milk / water</span>
+    </div>
+    <div class="colhead"><span>Hot</span><span>Iced</span></div>
+    <div id="grid" class="grid"></div>
+    <button id="unlockBtn" class="big-btn">+ Unlock a drink</button>
+  </section>
+
+  <section id="talk" class="pane">
+    <div class="search-wrap">
+      <input id="q" type="search" placeholder="Type a few words the customer said…" autocomplete="off" autocorrect="off" spellcheck="false">
+    </div>
+    <div class="talk-tools">
+      <span id="hint" class="hint"></span>
+      <button id="addLineBtn" class="link-btn">+ Add a line</button>
+    </div>
+    <div id="results" class="results"></div>
+  </section>
+</main>
+
+<div id="sheet" class="sheet" hidden>
+  <div class="sheet-bg" data-close></div>
+  <div class="sheet-card" role="dialog" aria-modal="true">
+    <button class="sheet-x" data-close aria-label="Close">×</button>
+    <div id="sheetBody"></div>
+  </div>
+</div>
+
+<script src="data.js?v=1"></script>
+<script src="app.js?v=3"></script>
+</body>
+</html>
