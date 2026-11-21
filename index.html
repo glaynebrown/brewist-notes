@@ -12,7 +12,11 @@
 <link rel="apple-touch-icon" href="apple-touch-icon.png">
 <link rel="icon" href="apple-touch-icon.png">
 <link rel="manifest" href="manifest.json">
-<link rel="stylesheet" href="style.css?v=9">
+<script>
+  // Apply saved Day/Night choice before the page draws (no flash)
+  try { var t = localStorage.getItem('bn.theme'); if (t === '"light"' || t === '"dark"') document.documentElement.dataset.theme = JSON.parse(t); } catch (e) {}
+</script>
+<link rel="stylesheet" href="style.css?v=11">
 </head>
 <body>
 <div class="awning" aria-hidden="true"></div>
@@ -21,6 +25,7 @@
   <nav class="tabs" role="tablist">
     <button class="tab on" data-tab="recipes" role="tab" aria-label="Recipes" title="Recipes"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="4" y="3" width="16" height="18" rx="2.5"/><path d="M8 7.5h8M8 11h8M8 14.5h5"/><path d="M14 16.5h4v1.2a2 2 0 0 1-2 2h0a2 2 0 0 1-2-2z" fill="currentColor" stroke="none"/></svg></button>
     <button class="tab" data-tab="talk" role="tab" aria-label="Customer talk" title="Customer talk"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 11.5C4 7.4 7.6 4.5 12 4.5s8 2.9 8 7-3.6 7-8 7c-1 0-2-.1-2.9-.4L5 19.5l1.2-3.4C4.8 14.9 4 13.3 4 11.5z"/><circle cx="8.5" cy="11.5" r="1" fill="currentColor" stroke="none"/><circle cx="12" cy="11.5" r="1" fill="currentColor" stroke="none"/><circle cx="15.5" cy="11.5" r="1" fill="currentColor" stroke="none"/></svg></button>
+    <button class="tab theme-btn" id="themeBtn" aria-label="Day / night" title="Day / night"></button>
   </nav>
 </header>
 
@@ -56,6 +61,6 @@
 </div>
 
 <script src="data.js?v=1"></script>
-<script src="app.js?v=7"></script>
+<script src="app.js?v=8"></script>
 </body>
 </html>

@@ -25,8 +25,9 @@
   --pattern: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='120' height='120' viewBox='0 0 120 120'%3E%3Cg fill='%237a4a2c' fill-opacity='0.08' stroke='none'%3E %3Cg transform='translate%2822 26%29 rotate%28-30%29'%3E%3Cellipse rx='6' ry='9'/%3E%3C/g%3E %3Cg transform='translate%2888 84%29 rotate%2825%29'%3E%3Cellipse rx='5' ry='7.5'/%3E%3C/g%3E %3Cpath d='M84 14l2 6 6 2-6 2-2 6-2-6-6-2 6-2z'/%3E %3Cpath d='M24 92l1.3 4 4 1.3-4 1.3-1.3 4-1.3-4-4-1.3 4-1.3z'/%3E %3Cpath d='M54 54h16v8a8 8 0 0 1-8 8h0a8 8 0 0 1-8-8z'/%3E%3Cpath d='M70 57h2.5a3.5 3.5 0 0 1 0 7H70v-2h2.5a1.5 1.5 0 0 0 0-3H70z'/%3E %3Ccircle cx='104' cy='44' r='2'/%3E%3Ccircle cx='46' cy='108' r='1.6'/%3E%3C/g%3E %3Cg fill='none' stroke='%237a4a2c' stroke-opacity='0.08' stroke-width='1.6' stroke-linecap='round'%3E%3Cpath d='M58 50c-2-3 2-4 0-7M65 50c-2-3 2-4 0-7'/%3E%3Cpath d='M19 22c2 2 2 6 4 8'/%3E%3C/g%3E%3C/svg%3E");
   --glow: linear-gradient(transparent, transparent);
 }
+/* Night café: follows the phone unless the header switch picks Day or Night */
 @media (prefers-color-scheme: dark) {
-  :root {
+  :root:not([data-theme="light"]) {
     --bg: #241b16;
     --card: #2f241e;
     --ink: #f3e6d8;
@@ -54,6 +55,33 @@
     --glow: radial-gradient(ellipse 90% 45% at 50% 0%, rgba(255, 170, 90, .13), transparent 70%);
   }
 }
+:root[data-theme="dark"] {
+  --bg: #241b16;
+  --card: #2f241e;
+  --ink: #f3e6d8;
+  --soft: #b8a493;
+  --line: #47372d;
+  --hot-bg: #5a2f17;
+  --hot-ink: #ffd2b0;
+  --iced-bg: #193a52;
+  --iced-ink: #bfe3ff;
+  --plain-bg: #3d3028;
+  --plain-ink: #ead8c6;
+  --add-bg: #22401b;
+  --add-ink: #c4ecb6;
+  --rem-bg: #4a2121;
+  --rem-ink: #ffc9c9;
+  --shadow: 0 2px 10px rgba(0, 0, 0, .3);
+  --accent: #c98660;
+  --unlock: #b58468;
+  --bg: #1f1611;
+  --card: #2b201a;
+  --awn1: #a85d38;
+  --awn2: #e3ccb0;
+  --stitch: #4a382c;
+  --pattern: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='120' height='120' viewBox='0 0 120 120'%3E%3Cg fill='%23f2cfa6' fill-opacity='0.06' stroke='none'%3E %3Cg transform='translate%2822 26%29 rotate%28-30%29'%3E%3Cellipse rx='6' ry='9'/%3E%3C/g%3E %3Cg transform='translate%2888 84%29 rotate%2825%29'%3E%3Cellipse rx='5' ry='7.5'/%3E%3C/g%3E %3Cpath d='M84 14l2 6 6 2-6 2-2 6-2-6-6-2 6-2z'/%3E %3Cpath d='M24 92l1.3 4 4 1.3-4 1.3-1.3 4-1.3-4-4-1.3 4-1.3z'/%3E %3Cpath d='M54 54h16v8a8 8 0 0 1-8 8h0a8 8 0 0 1-8-8z'/%3E%3Cpath d='M70 57h2.5a3.5 3.5 0 0 1 0 7H70v-2h2.5a1.5 1.5 0 0 0 0-3H70z'/%3E %3Ccircle cx='104' cy='44' r='2'/%3E%3Ccircle cx='46' cy='108' r='1.6'/%3E%3C/g%3E %3Cg fill='none' stroke='%23f2cfa6' stroke-opacity='0.06' stroke-width='1.6' stroke-linecap='round'%3E%3Cpath d='M58 50c-2-3 2-4 0-7M65 50c-2-3 2-4 0-7'/%3E%3Cpath d='M19 22c2 2 2 6 4 8'/%3E%3C/g%3E%3C/svg%3E");
+  --glow: radial-gradient(ellipse 90% 45% at 50% 0%, rgba(255, 170, 90, .13), transparent 70%);
+}
 
 * { box-sizing: border-box; }
 html, body { margin: 0; }
@@ -78,6 +106,7 @@ button { font: inherit; color: inherit; cursor: pointer; }
 }
 .top h1 { margin: 0; font-size: 22px; letter-spacing: -.2px; }
 .tabs { display: flex; gap: 8px; }
+.theme-btn { opacity: .9; }
 .tab {
   width: 44px; height: 44px; border-radius: 50%; padding: 0;
   display: grid; place-items: center;
@@ -163,7 +192,8 @@ main { max-width: 1000px; margin: 0 auto; padding: 14px 16px 40px; }
 .order .says { margin: 0 0 4px; font-size: 16px; }
 .order .says.alt { color: var(--soft); font-size: 15px; }
 .order mark { background: #ffe39a; color: inherit; border-radius: 3px; padding: 0 1px; }
-@media (prefers-color-scheme: dark) { .order mark { background: #6b5617; } }
+@media (prefers-color-scheme: dark) { :root:not([data-theme="light"]) .order mark { background: #6b5617; } }
+:root[data-theme="dark"] .order mark { background: #6b5617; }
 .order .lines { margin-bottom: 10px; }
 .order .more { border: 0; background: none; color: var(--soft); font-size: 13px; padding: 2px 0; text-decoration: underline; }
 .drink {
@@ -236,20 +266,16 @@ main { max-width: 1000px; margin: 0 auto; padding: 14px 16px 40px; }
 
 /* Striped awning with a scalloped edge */
 .awning {
-  position: relative; z-index: 6;
-  height: calc(env(safe-area-inset-top) + 26px);
-  background: repeating-linear-gradient(90deg, var(--awn1) 0 28px, var(--awn2) 28px 56px);
-  box-shadow: inset 0 -6px 8px -6px rgba(0, 0, 0, .18);
-}
-.awning::after {
-  content: ""; position: absolute; left: 0; right: 0; top: 100%; height: 14px;
+  /* stripes + scalloped edge drawn inside one box (iPhone Safari hides anything that overlaps the blurred header) */
+  height: calc(env(safe-area-inset-top) + 40px);
   background:
-    radial-gradient(circle at 14px 0, var(--awn1) 13.5px, transparent 14px) 0 0 / 56px 14px repeat-x,
-    radial-gradient(circle at 42px 0, var(--awn2) 13.5px, transparent 14px) 0 0 / 56px 14px repeat-x;
-  filter: drop-shadow(0 2px 1.5px rgba(0, 0, 0, .12));
+    radial-gradient(circle at 14px 0, var(--awn1) 13.5px, transparent 14px) 0 100% / 56px 14px repeat-x,
+    radial-gradient(circle at 42px 0, var(--awn2) 13.5px, transparent 14px) 0 100% / 56px 14px repeat-x,
+    repeating-linear-gradient(90deg, var(--awn1) 0 28px, var(--awn2) 28px 56px) 0 0 / 100% calc(100% - 14px) no-repeat;
+  filter: drop-shadow(0 2px 2px rgba(0, 0, 0, .15));
 }
 .top {
-  padding-top: 22px;
+  padding-top: 8px;
   background: color-mix(in srgb, var(--bg) 90%, transparent);
   -webkit-backdrop-filter: blur(10px); backdrop-filter: blur(10px);
 }
@@ -313,3 +339,12 @@ main { max-width: 1000px; margin: 0 auto; padding: 14px 16px 40px; }
 .ing-stack.n3 img:nth-child(1) { left: 0; top: 0; }
 .ing-stack.n3 img:nth-child(2) { right: 0; top: 4px; }
 .ing-stack.n3 img:nth-child(3) { left: 9px; bottom: -2px; }
+
+/* Narrow phones: keep the title + 3 round buttons on one line */
+@media (max-width: 400px) {
+  .tabs { gap: 6px; }
+  .tab { width: 40px; height: 40px; }
+  .tab svg { width: 22px; height: 22px; }
+  .top h1 { font-size: 20px; }
+  .sign img { width: 28px; height: 28px; }
+}

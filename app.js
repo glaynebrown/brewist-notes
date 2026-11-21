@@ -67,12 +67,12 @@
 
   /* ---------- tabs ---------- */
   function showTab(name) {
-    document.querySelectorAll('.tab').forEach(b => b.classList.toggle('on', b.dataset.tab === name));
+    document.querySelectorAll('.tab[data-tab]').forEach(b => b.classList.toggle('on', b.dataset.tab === name));
     document.querySelectorAll('.pane').forEach(p => p.classList.toggle('on', p.id === name));
     save('bn.tab', name);
     if (name === 'talk') setTimeout(() => $('#q').focus(), 50);
   }
-  document.querySelectorAll('.tab').forEach(b => b.addEventListener('click', () => showTab(b.dataset.tab)));
+  document.querySelectorAll('.tab[data-tab]').forEach(b => b.addEventListener('click', () => showTab(b.dataset.tab)));
 
   /* ---------- recipes grid ---------- */
   const STEAM_ICON = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 11h11v4a5 5 0 0 1-5 5h-1a5 5 0 0 1-5-5z"/><path d="M16 12.5h1.5a2.5 2.5 0 0 1 0 5H16"/><path d="M8.5 8c-1-1.3 1-2 0-3.5M12.5 8c-1-1.3 1-2 0-3.5"/></svg>';
@@ -417,6 +417,29 @@
     });
   }
   $('#addLineBtn').addEventListener('click', openAddLine);
+
+  /* ---------- day / night switch ---------- */
+  const THEMES = {
+    auto: { label: 'Follows your phone', icon: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="7" y="3" width="10" height="18" rx="2.5"/><path d="M11 18h2"/></svg>' },
+    light: { label: 'Day', icon: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" aria-hidden="true"><circle cx="12" cy="12" r="4"/><path d="M12 3v2M12 19v2M3 12h2M19 12h2M5.6 5.6l1.4 1.4M17 17l1.4 1.4M5.6 18.4L7 17M17 7l1.4-1.4"/></svg>' },
+    dark: { label: 'Night', icon: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linejoin="round" aria-hidden="true"><path d="M19 14.5A7.5 7.5 0 0 1 9.5 5a7.5 7.5 0 1 0 9.5 9.5z"/></svg>' }
+  };
+  const ORDER = ['auto', 'light', 'dark'];
+  let theme = load('bn.theme', 'auto');
+  if (!THEMES[theme]) theme = 'auto';
+  function applyTheme() {
+    if (theme === 'auto') delete document.documentElement.dataset.theme;
+    else document.documentElement.dataset.theme = theme;
+    const t = THEMES[theme];
+    $('#themeBtn').innerHTML = t.icon;
+    $('#themeBtn').title = $('#themeBtn').ariaLabel = 'Look: ' + t.label;
+  }
+  $('#themeBtn').addEventListener('click', () => {
+    theme = ORDER[(ORDER.indexOf(theme) + 1) % ORDER.length];
+    save('bn.theme', theme);
+    applyTheme();
+  });
+  applyTheme();
 
   /* ---------- start ---------- */
   const setHead = () => document.documentElement.style.setProperty('--head-h', $('.top').offsetHeight + 'px');
