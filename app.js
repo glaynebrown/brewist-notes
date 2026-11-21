@@ -419,23 +419,19 @@
   $('#addLineBtn').addEventListener('click', openAddLine);
 
   /* ---------- day / night switch ---------- */
-  const THEMES = {
-    auto: { label: 'Follows your phone', icon: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="7" y="3" width="10" height="18" rx="2.5"/><path d="M11 18h2"/></svg>' },
-    light: { label: 'Day', icon: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" aria-hidden="true"><circle cx="12" cy="12" r="4"/><path d="M12 3v2M12 19v2M3 12h2M19 12h2M5.6 5.6l1.4 1.4M17 17l1.4 1.4M5.6 18.4L7 17M17 7l1.4-1.4"/></svg>' },
-    dark: { label: 'Night', icon: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linejoin="round" aria-hidden="true"><path d="M19 14.5A7.5 7.5 0 0 1 9.5 5a7.5 7.5 0 1 0 9.5 9.5z"/></svg>' }
-  };
-  const ORDER = ['auto', 'light', 'dark'];
-  let theme = load('bn.theme', 'auto');
-  if (!THEMES[theme]) theme = 'auto';
+  // Day or Night. First time: start with whatever the phone is set to.
+  const SUN = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" aria-hidden="true"><circle cx="12" cy="12" r="4"/><path d="M12 3v2M12 19v2M3 12h2M19 12h2M5.6 5.6l1.4 1.4M17 17l1.4 1.4M5.6 18.4L7 17M17 7l1.4-1.4"/></svg>';
+  const MOON = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linejoin="round" aria-hidden="true"><path d="M19 14.5A7.5 7.5 0 0 1 9.5 5a7.5 7.5 0 1 0 9.5 9.5z"/></svg>';
+  let theme = load('bn.theme', null);
+  if (theme !== 'light' && theme !== 'dark') theme = matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light';
   function applyTheme() {
-    if (theme === 'auto') delete document.documentElement.dataset.theme;
-    else document.documentElement.dataset.theme = theme;
-    const t = THEMES[theme];
-    $('#themeBtn').innerHTML = t.icon;
-    $('#themeBtn').title = $('#themeBtn').ariaLabel = 'Look: ' + t.label;
+    document.documentElement.dataset.theme = theme;
+    // show what a tap switches to
+    $('#themeBtn').innerHTML = theme === 'dark' ? SUN : MOON;
+    $('#themeBtn').title = $('#themeBtn').ariaLabel = theme === 'dark' ? 'Switch to day' : 'Switch to night';
   }
   $('#themeBtn').addEventListener('click', () => {
-    theme = ORDER[(ORDER.indexOf(theme) + 1) % ORDER.length];
+    theme = theme === 'dark' ? 'light' : 'dark';
     save('bn.theme', theme);
     applyTheme();
   });
