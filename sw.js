@@ -1,9 +1,9 @@
 // Offline copy of the app for when there's no internet.
-const VERSION = 'bn-v5';
+const VERSION = 'bn-v6';
 const FILES = [
   './',
   'index.html',
-  'style.css?v=3',
+  'style.css?v=4',
   'app.js?v=3',
   'data.js?v=1',
   'manifest.json',

@@ -17,6 +17,7 @@
   --rem-bg: #f7dede;
   --rem-ink: #93302f;
   --shadow: 0 2px 10px rgba(90, 55, 30, .08);
+  --unlock: #d9875a;
 }
 @media (prefers-color-scheme: dark) {
   :root {
@@ -36,6 +37,8 @@
     --rem-bg: #4a2121;
     --rem-ink: #ffc9c9;
     --shadow: 0 2px 10px rgba(0, 0, 0, .3);
+    --accent: #c98660;
+    --unlock: #b58468;
   }
 }
 
@@ -112,8 +115,8 @@ main { max-width: 1000px; margin: 0 auto; padding: 14px 16px 40px; }
 
 .big-btn {
   display: block; width: 100%; margin-top: 18px;
-  border: 2px dashed var(--accent); background: transparent; color: var(--accent);
-  border-radius: 16px; padding: 14px; font-weight: 700; font-size: 16px;
+  border: 2px dashed color-mix(in srgb, var(--unlock) 55%, transparent); background: transparent; color: var(--unlock);
+  border-radius: 16px; padding: 14px; font-weight: 600; font-size: 16px;
 }
 .empty-note { color: var(--soft); text-align: center; padding: 30px 10px; grid-column: 1 / -1; }
 
