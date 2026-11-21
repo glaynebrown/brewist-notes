@@ -75,6 +75,8 @@
   document.querySelectorAll('.tab').forEach(b => b.addEventListener('click', () => showTab(b.dataset.tab)));
 
   /* ---------- recipes grid ---------- */
+  const STEAM_ICON = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 11h11v4a5 5 0 0 1-5 5h-1a5 5 0 0 1-5-5z"/><path d="M16 12.5h1.5a2.5 2.5 0 0 1 0 5H16"/><path d="M8.5 8c-1-1.3 1-2 0-3.5M12.5 8c-1-1.3 1-2 0-3.5"/></svg>';
+  const ICE_ICON = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linejoin="round" aria-hidden="true"><rect x="4" y="6" width="11" height="11" rx="2.5" transform="rotate(-8 9.5 11.5)"/><rect x="11" y="10" width="9" height="9" rx="2" transform="rotate(10 15.5 14.5)"/><path d="M7 9.5l2-.3" stroke-linecap="round"/></svg>';
   const BEAN = '<svg viewBox="0 0 24 24" aria-hidden="true"><ellipse cx="12" cy="12" rx="6.5" ry="9.5" transform="rotate(30 12 12)" fill="currentColor"/><path d="M8.2 5.8c3.6 3 .4 8.4 7.6 12.4" fill="none" stroke="var(--bg)" stroke-width="1.6" stroke-linecap="round"/></svg>';
   const napping = side => `<div class="napping" aria-hidden="true">
     <svg viewBox="0 0 64 64" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
@@ -103,7 +105,7 @@
     const sorted = [...rows.values()].sort((a, b) => a.sort - b.sort);
     const card = (r, side) => r ? `
       <button class="card ${r.temp}" data-id="${r.id}">
-        <span class="tag ${r.temp}">${r.temp === 'iced' ? 'ICED' : 'HOT'}</span>
+        <span class="tag ${r.temp}" title="${r.temp === 'iced' ? 'Iced' : 'Hot'}">${r.temp === 'iced' ? ICE_ICON : STEAM_ICON}</span>
         <img src="img/${esc(r.img)}" alt="">
         <div class="info">
           <h3>${esc(r.name)}</h3>
@@ -243,6 +245,8 @@
       const rk = recipeItems(r).map(key);
       const added = keys.filter(k => !rk.includes(k));
       const removed = rk.filter(k => !keys.includes(k));
+      // Only toppings can be left off — no coffee / no syrup / no ice makes it a different drink
+      if (removed.some(k => stage(k) < 6)) continue;
       const overlap = rk.length - removed.length;
       const cost = added.length + removed.length;
       if (overlap < Math.min(2, rk.length) || cost > 3 || removed.length >= overlap) continue;
@@ -253,6 +257,17 @@
     return best;
   }
 
+  // Ingredient pictures from the wiki (img/ing/…)
+  const ING = new Set(['Cherry', 'Chocolate_Chips', 'Chocolate_Syrup', 'Cinnamon_Sticks', 'Cocoa_Powder', 'Cold_Water', 'Cranberry_Puree', 'Decaf_Beans', 'Gingerbread', 'Hot_Water', 'Ice_Cubes', 'Lavender_Syrup', 'Mint_Leaf', 'Mint_Syrup', 'Oat_Milk', 'Orange_Slices', 'Orange_Syrup', 'Pineapple_Puree', 'Pumpkin_Syrup', 'Sprinkles', 'Strawberry_Ice_Cream', 'Strawberry_Puree', 'Strawberry_Slices', 'Strawberry_Syrup', 'Vanilla_Bean', 'Vanilla_Flower', 'Vanilla_Ice_Cream', 'Vanilla_Syrup', 'Whipped_Cream', 'Whole_Milk']);
+  const ING_ALIAS = { 'ice': 'Ice_Cubes', 'steamed whole milk': 'Whole_Milk', 'steamed oat milk': 'Oat_Milk', 'orange slice': 'Orange_Slices' };
+  function ingImg(item) {
+    if (/decaf/i.test(item)) return 'img/ing/Decaf_Beans.webp';
+    const k = key(item);
+    if (k === 'espresso') return 'img/Recipe_Espresso.webp';
+    const file = ING_ALIAS[k] || k.split(' ').map(w => w[0].toUpperCase() + w.slice(1)).join('_');
+    return ING.has(file) ? `img/ing/${file}.webp` : '';
+  }
+
   function drinkHTML(d) {
     const m = matchRecipe(d.items);
     const times = d.times > 1 ? ` <span class="times">×${d.times}</span>` : '';
@@ -261,6 +276,10 @@
     if (m) {
       img = `<img src="img/${esc(m.r.img)}" alt="">`;
       name = esc(m.r.name) + (m.cost ? ' <span class="hint">with changes</span>' : '');
+    } else {
+      // Off-menu (milk, water, hot chocolate…): show the main ingredients' pictures instead.
+      const pics = [...new Set(inOrder(d.items).map(ingImg).filter(Boolean))].slice(0, 3);
+      if (pics.length) img = `<div class="ing-stack n${pics.length}">${pics.map(p => `<img src="${p}" alt="">`).join('')}</div>`;
     }
     const addedKeys = m ? m.added : [];
     const chips = inOrder(d.items).map(i => {

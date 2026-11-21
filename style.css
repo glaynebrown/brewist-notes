@@ -259,9 +259,7 @@ main { max-width: 1000px; margin: 0 auto; padding: 14px 16px 40px; }
 .sign {
   font-family: var(--display); font-weight: 800;
   display: inline-flex; align-items: center; gap: 8px;
-  background: var(--card); border: 2px solid var(--awn1);
-  padding: 4px 14px 4px 8px; border-radius: 14px;
-  box-shadow: var(--shadow);
+  padding: 4px 0; border-radius: 14px;
 }
 .sign img { width: 30px; height: 30px; border-radius: 8px; }
 .card h3, .sheet h2, .big-btn, .save-btn, .drink .dname, .unlock-item b { font-family: var(--display); }
@@ -279,12 +277,13 @@ main { max-width: 1000px; margin: 0 auto; padding: 14px 16px 40px; }
   border: 1.5px dashed var(--stitch); pointer-events: none;
 }
 .tag {
-  position: absolute; top: 11px; right: 13px;
-  font-size: 10.5px; font-weight: 800; letter-spacing: .06em;
-  padding: 2px 7px; border-radius: 999px;
+  position: absolute; top: 10px; right: 11px;
+  width: 26px; height: 26px; border-radius: 50%;
+  display: grid; place-items: center;
 }
-.tag.hot { background: var(--hot-bg); color: var(--hot-ink); }
-.tag.iced { background: var(--iced-bg); color: var(--iced-ink); }
+.tag svg { width: 19px; height: 19px; }
+.tag.hot { color: var(--hot-ink); }
+.tag.iced { color: var(--iced-ink); }
 .order { position: relative; }
 .order::before {
   content: ""; position: absolute; inset: 5px; border-radius: 12px;
@@ -304,3 +303,13 @@ main { max-width: 1000px; margin: 0 auto; padding: 14px 16px 40px; }
 .big-btn { display: flex; align-items: center; justify-content: center; gap: 10px; }
 .big-btn svg { width: 16px; height: 16px; flex: none; }
 .big-btn svg:last-child { transform: scaleX(-1); }
+
+/* Off-menu orders: overlapping ingredient pictures */
+.ing-stack { position: relative; width: 52px; height: 52px; flex: none; }
+.ing-stack img { position: absolute; width: 34px; height: 34px; object-fit: contain; filter: drop-shadow(0 1px 1.5px rgba(0,0,0,.18)); }
+.ing-stack.n1 img { width: 46px; height: 46px; left: 3px; top: 3px; }
+.ing-stack.n2 img:nth-child(1) { left: 0; top: 2px; }
+.ing-stack.n2 img:nth-child(2) { right: 0; bottom: 2px; }
+.ing-stack.n3 img:nth-child(1) { left: 0; top: 0; }
+.ing-stack.n3 img:nth-child(2) { right: 0; top: 4px; }
+.ing-stack.n3 img:nth-child(3) { left: 9px; bottom: -2px; }
