@@ -144,7 +144,18 @@ main { max-width: 1000px; margin: 0 auto; padding: 14px 16px 40px; }
   font-size: 13px; font-weight: 700; text-transform: uppercase; letter-spacing: .08em;
   color: var(--soft); margin: 0 4px 6px;
 }
-.grid { display: grid; grid-template-columns: 1fr 1fr; grid-auto-rows: 1fr; gap: 12px; }
+.grid { display: grid; grid-template-columns: 1fr 1fr; grid-auto-rows: 1fr; grid-auto-flow: row dense; gap: 12px; }
+.col-hot { grid-column: 1; }
+.col-iced { grid-column: 2; }
+.grid-divider {
+  grid-column: 1 / -1;
+  display: flex; align-items: center; gap: 12px; margin: 6px 4px;
+  color: var(--soft); font-family: var(--display); font-size: 13px; font-weight: 700;
+  letter-spacing: .06em; text-transform: uppercase;
+}
+.grid-divider::before, .grid-divider::after {
+  content: ""; flex: 1; border-top: 1.5px dashed var(--stitch);
+}
 /* every card the same height so the hot/iced rows line up evenly */
 .slot { display: flex; }
 .slot .card { height: 100%; }
@@ -318,14 +329,6 @@ main { max-width: 1000px; margin: 0 auto; padding: 14px 16px 40px; }
   border: 1.5px dashed var(--stitch); pointer-events: none;
 }
 
-/* Sleeping mug in an empty spot */
-.napping {
-  width: 100%; height: 100%; min-height: 120px;
-  display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 4px;
-  color: var(--soft); opacity: .55; font-size: 12.5px; text-align: center;
-  border: 1.5px dashed var(--line); border-radius: 20px;
-}
-.napping svg { width: 56px; height: 56px; }
 
 /* Coffee beans on the unlock button */
 .big-btn { display: flex; align-items: center; justify-content: center; gap: 10px; }

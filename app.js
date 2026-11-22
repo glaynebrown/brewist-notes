@@ -78,16 +78,6 @@
   const STEAM_ICON = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 11h11v4a5 5 0 0 1-5 5h-1a5 5 0 0 1-5-5z"/><path d="M16 12.5h1.5a2.5 2.5 0 0 1 0 5H16"/><path d="M8.5 8c-1-1.3 1-2 0-3.5M12.5 8c-1-1.3 1-2 0-3.5"/></svg>';
   const ICE_ICON = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linejoin="round" aria-hidden="true"><rect x="4" y="6" width="11" height="11" rx="2.5" transform="rotate(-8 9.5 11.5)"/><rect x="11" y="10" width="9" height="9" rx="2" transform="rotate(10 15.5 14.5)"/><path d="M7 9.5l2-.3" stroke-linecap="round"/></svg>';
   const BEAN = '<svg viewBox="0 0 24 24" aria-hidden="true"><ellipse cx="12" cy="12" rx="6.5" ry="9.5" transform="rotate(30 12 12)" fill="currentColor"/><path d="M8.2 5.8c3.6 3 .4 8.4 7.6 12.4" fill="none" stroke="var(--bg)" stroke-width="1.6" stroke-linecap="round"/></svg>';
-  const napping = side => `<div class="napping" aria-hidden="true">
-    <svg viewBox="0 0 64 64" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
-      <path d="M12 28h30v10a13 13 0 0 1-13 13h-4a13 13 0 0 1-13-13z"/>
-      <path d="M42 31h3.5a5.5 5.5 0 0 1 0 11H41"/>
-      <path d="M20 37q2.5 2.5 5 0M29 37q2.5 2.5 5 0"/>
-      <path d="M25 44q2 1.2 4 0"/>
-      <path d="M46 10h6l-6 7h6M38 16h4l-4 4.5h4"/>
-    </svg>
-    <span>no ${side} version</span>
-  </div>`;
   function sortKey(r) {
     return (r.level != null ? r.level : 100) * 1000 + RECIPES.indexOf(r);
   }
@@ -103,17 +93,28 @@
       rows.set(base, row);
     }
     const sorted = [...rows.values()].sort((a, b) => a.sort - b.sort);
-    const card = (r, side) => r ? `
-      <button class="card ${r.temp}" data-id="${r.id}">
+    const card = (r, cls) => `
+      <div class="slot ${cls}"><button class="card ${r.temp}" data-id="${r.id}">
         <span class="tag ${r.temp}" title="${r.temp === 'iced' ? 'Iced' : 'Hot'}">${r.temp === 'iced' ? ICE_ICON : STEAM_ICON}</span>
         <img src="img/${esc(r.img)}" alt="">
         <div class="info">
           <h3>${esc(r.name)}</h3>
           <div class="chips">${r.ing.map(i => chip(i)).join('')}</div>
         </div>
-      </button>` : napping(side);
+      </button></div>`;
+    // Pairs share a row; one-way drinks fill their own column (hot left, iced right) with no empty cards
+    const pairs = sorted.filter(row => row.hot && row.iced);
+    const hotOnly = sorted.filter(row => !row.iced).map(row => row.hot);
+    const icedOnly = sorted.filter(row => !row.hot).map(row => row.iced);
+    const divider = pairs.length && (hotOnly.length || icedOnly.length)
+      ? '<div class="grid-divider"><span>only one way</span></div>' : '';
+    // pair rows all match the tallest card; the divider row is just its own height
+    $('#grid').style.gridTemplateRows = divider ? `repeat(${pairs.length}, 1fr) auto` : '';
     $('#grid').innerHTML = sorted.length
-      ? sorted.map(row => `<div class="slot">${card(row.hot, 'hot')}</div><div class="slot">${card(row.iced, 'iced')}</div>`).join('')
+      ? pairs.map(row => card(row.hot, 'col-hot') + card(row.iced, 'col-iced')).join('') +
+        divider +
+        hotOnly.map(r => card(r, 'col-hot')).join('') +
+        icedOnly.map(r => card(r, 'col-iced')).join('')
       : `<p class="empty-note">No drinks yet — tap “Unlock a drink” to add the ones you have.</p>`;
     const left = RECIPES.length - unlocked.size;
     $('#unlockBtn').innerHTML = BEAN + (left ? `Unlock a drink (${left} more in the game)` : 'All drinks unlocked!') + BEAN;
